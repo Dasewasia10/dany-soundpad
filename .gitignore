@@ -1,0 +1,16 @@
+# Virtual Environment
+venv/
+env/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Konfigurasi Pribadi (Jangan bagikan config.json milikmu!)
+config.json
+
+# Private Notes
+ffmpeg.txt
+
+# File Sistem Windows
+Thumbs.db
