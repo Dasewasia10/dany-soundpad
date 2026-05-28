@@ -12,19 +12,19 @@ def konversi_dan_naikkan_file():
     print("1. Memeriksa dan mengonversi file MP3 di dalam folder...")
     file_terkonversi = 0
 
-    # Tahap 1: Konversi semua MP3 ke OGG terlebih dahulu di dalam folder 'suara'
+    # Tahap 1: Konversi semua MP3 ke WAV terlebih dahulu di dalam folder
     for nama_file in os.listdir(FOLDER_SUARA):
         if nama_file.endswith(".mp3"):
             path_mp3 = os.path.join(FOLDER_SUARA, nama_file)
-            nama_file_ogg = os.path.splitext(nama_file)[0] + ".ogg"
-            path_ogg = os.path.join(FOLDER_SUARA, nama_file_ogg)
+            nama_file_wav = os.path.splitext(nama_file)[0] + ".wav"
+            path_wav = os.path.join(FOLDER_SUARA, nama_file_wav)
 
-            perintah = f'ffmpeg -i "{path_mp3}" -c:a libvorbis -q:a 4 "{path_ogg}" -y'
+            perintah = f'ffmpeg -i "{path_mp3}" -c:a libvorbis -q:a 4 "{path_wav}" -y'
 
             try:
                 subprocess.run(perintah, shell=True, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                print(f"  ✅ Berhasil Konversi: {nama_file} -> {nama_file_ogg}")
-                os.remove(path_mp3)  # Hapus MP3 setelah sukses jadi OGG
+                print(f"  ✅ Berhasil Konversi: {nama_file} -> {nama_file_wav}")
+                os.remove(path_mp3)  # Hapus MP3 setelah sukses jadi WAV
                 file_terkonversi += 1
             except subprocess.CalledProcessError:
                 print(f"  ❌ Gagal mengonversi: {nama_file}. Pastikan FFmpeg terinstal.")
