@@ -41,7 +41,7 @@ def cegah_ganda_atau_bangunkan():
         sys.exit(0)
 
 # --- KONFIGURASI UTAMA ---
-VB_CABLE_DEVICE_ID = 7  
+VB_CABLE_DEVICE_ID = 10
 FOLDER_SUARA = "I:/Music/Soundboard"
 KOLOM_MAKSIMAL = 2      
 BATAS_KARAKTER = 32
@@ -74,21 +74,27 @@ def simpan_konfigurasi(status_monitor, favs, vol):
 def stream_audio(data, fs, device_id, volume):
     try:
         channels = data.shape[1] if len(data.shape) > 1 else 1
-        chunk_size = int(fs * 0.05) 
+        
+        # 1. Perbesar potongan menjadi 100ms agar loop Python tidak tersendat
+        chunk_size = int(fs * 0.1) 
+        
+        # Terapkan volume slider
         data = data * volume
 
-        with sd.OutputStream(samplerate=fs, device=device_id, channels=channels, dtype='float32') as stream:
+        # 2. Tambahkan latency='high' agar sistem menyiapkan buffer lebih besar 
+        # untuk menutupi jeda waktu saat Python memotong audio
+        with sd.OutputStream(samplerate=fs, device=device_id, channels=channels, dtype='float32', latency='high') as stream:
             for i in range(0, len(data), chunk_size):
                 if stop_event.is_set():
                     break  
                 chunk = data[i:i+chunk_size]
                 stream.write(chunk)
     except Exception:
-        pass 
+        pass
 
 def _play_manager(file_path):
     stop_event.set()
-    time.sleep(0.08) 
+    time.sleep(0.15) 
     stop_event.clear()
 
     try:
